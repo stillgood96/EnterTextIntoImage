@@ -11,7 +11,6 @@ import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.imageio.ImageIO;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,24 +23,20 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class TestController2 {
 
-
   @RequestMapping(value = "/enter-text2", method = { RequestMethod.POST})
   ResponseEntity<Resource> EnterText(@ModelAttribute RequestTestDto dto) throws IOException {
 
+    GifDecoder gifDecoder = new GifDecoder();
+
     MultipartFile picture = dto.getPicture();
-
-
     InputStream inputStream = picture.getInputStream();
+    gifDecoder.read(new BufferedInputStream(inputStream));
 
-    BufferedImage[] frames = GifDecoder.read(new BufferedInputStream(inputStream));
-
-    // Create an encoder to write the modified GIF
     AnimatedGifEncoder encoder = new AnimatedGifEncoder();
-    encoder.start(new FileOutputStream("path/to/your/output.gif"));
+    encoder.start(new FileOutputStream("/Users/imlsw96/Desktop/test.gif"));
 
-    // Iterate through frames and add text
-    for (BufferedImage frame : frames) {
-      BufferedImage frameWithText = addTextToFrame(frame, "Hello, Custom Text!");
+    for(int i = 0; i < gifDecoder.getFrameCount(); i++) {
+      BufferedImage frameWithText = addTextToFrame(gifDecoder.getFrame(i), "HelloWorld!!!");
       encoder.addFrame(frameWithText);
     }
 
@@ -54,7 +49,7 @@ public class TestController2 {
     Graphics2D graphics = frame.createGraphics();
     graphics.setColor(Color.WHITE);
     graphics.setFont(new Font("Arial", Font.BOLD, 30));
-    graphics.drawString(text, 50, 50);
+    graphics.drawString(text, 15, 50);
     graphics.dispose();
     return frame;
   }
