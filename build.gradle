@@ -20,6 +20,12 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://repo.spring.io/plugins-release'
+    }
+    maven {
+        url "https://repository.jboss.org/maven2"
+    }
 }
 
 dependencies {
@@ -28,6 +34,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation group: 'com.madgag', name: 'animated-gif-lib', version: '1.4'
+
 }
 
 tasks.named('test') {
